@@ -1,0 +1,31 @@
+---
+title: "Title"
+subtitle: "Subtitle"
+author: "Gabriela Romero Campos"
+date: "`r Sys.Date()`"
+output:
+  grcthemes::GRC_greenOlive:
+    code_folding: show
+    self_notes: true
+---
+
+```{r setup, include = FALSE}
+library(grcthemes)
+library(ggplot2)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
+                      fig.width = 8, fig.height = 4.5)
+```
+
+# Introduction
+
+Overview text.
+
+## Objectives
+
+# Methods
+
+## Data
+
+# Results
+
+## Main findings

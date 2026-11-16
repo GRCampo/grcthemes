@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="$if(lang)$$lang$$else$en$endif$">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+$for(author-meta)$
+<meta name="author" content="$author-meta$">
+$endfor$
+$if(date-meta)$
+<meta name="date" content="$date-meta$">
+$endif$
+<title>$if(pagetitle)$$pagetitle$$else$$title$$endif$</title>
+<!-- Fontes do tema (Google Fonts): URL definida em R/themes.R (fonts_url) -->
+$if(grc_fonts_url)$
+<link rel="stylesheet" href="$grc_fonts_url$">
+$endif$
+$for(header-includes)$
+$header-includes$
+$endfor$
+$if(highlighting-css)$
+<style type="text/css">
+$highlighting-css$
+</style>
+$endif$
+$for(css)$
+<link rel="stylesheet" href="$css$">
+$endfor$
+$if(math)$
+$math$
+$endif$
+</head>
+
+<body class="grc" data-code-folding="$code_folding$">
+
+<!-- ============ HEADER (fixo) ============ -->
+<header id="grc-header">
+$if(header_img)$
+  <img class="grc-header-bg" src="$header_img$" alt="">
+$endif$
+  <div class="grc-header-text">
+    <div class="grc-title">$title$</div>
+    $if(subtitle)$<div class="grc-subtitle">$subtitle$</div>$endif$
+  </div>
+$if(logos)$
+  <div class="grc-logos$if(logo_chip)$ grc-logos-chip$endif$">
+    $for(logos)$<img src="$logos$" alt="logo">$endfor$
+  </div>
+$endif$
+</header>
+
+<!-- ============ MENU PRINCIPAL (fixo, gerado pelo JS a partir dos #) ============ -->
+<nav id="grc-mainmenu" aria-label="Main menu"></nav>
+
+<!-- ============ MENU LATERAL (gerado pelo JS a partir dos ## da secao ativa) ============ -->
+<nav id="grc-sidemenu" aria-label="Section menu"></nav>
+
+<!-- ============ CORPO ============ -->
+<main id="grc-content" data-intro-label="$intro_label$">
+$for(include-before)$
+$include-before$
+$endfor$
+$body$
+$for(include-after)$
+$include-after$
+$endfor$
+</main>
+
+<!-- ============ RODAPE (fixo) ============ -->
+<footer id="grc-footer">
+$if(footer_img)$
+  <img src="$footer_img$" alt="">
+$endif$
+  <div class="grc-footer-text">
+    $if(footer_author)$<span>$footer_author$</span>&nbsp;&middot;&nbsp;$endif$<span>Last update at $footer_stamp$</span>
+  </div>
+</footer>
+
+</body>
+</html>

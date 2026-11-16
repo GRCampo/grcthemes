@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 145 52" width="145" height="52">
+  <circle cx="24" cy="26" r="20" fill="#B0653F"/><circle cx="24" cy="26" r="8" fill="#EFE6D2"/>
+  <text x="52" y="24" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" letter-spacing=".5" fill="#3F4A33">YOUR LAB</text>
+  <text x="52" y="39" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6F6A5C">Research group</text>
+</svg>

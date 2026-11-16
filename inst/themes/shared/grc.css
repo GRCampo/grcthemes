@@ -1,0 +1,264 @@
+/* =====================================================================
+   grcthemes  -  motor compartilhado (layout + componentes)
+   ---------------------------------------------------------------------
+   Usa apenas variaveis --grc-*. Cores e fontes vem do theme.css de cada
+   tema (carregado depois deste arquivo, entao pode sobrepor as medidas).
+   ===================================================================== */
+:root {
+  /* ---- medidas (um tema pode sobrepor no seu theme.css) ---- */
+  --grc-header-height: 120px;   /* altura do header                  */
+  --grc-logo-height:   52px;    /* altura dos logos no header        */
+  --grc-gallery-height: max(260px, calc(100vh - 460px)); /* imagem grande: cabe na tela junto com as miniaturas */
+  --grc-gallery-thumb:  70px;   /* altura das miniaturas             */
+  --grc-footer-height: 48px;    /* altura do rodape                  */
+  --grc-sidebar-width: 260px;
+  --grc-content-max:   1000px;  /* largura maxima do texto           */
+  --grc-font-mono:   Consolas, "Courier New", monospace;            /* codigo */
+}
+
+/* =====================================================================
+   LAYOUT (grid):  header / mainmenu / side + content / footer
+   ===================================================================== */
+html, body { height: 100%; margin: 0; }
+
+body.grc {
+  display: grid;
+  grid-template-rows: var(--grc-header-height) auto 1fr var(--grc-footer-height);
+  grid-template-columns: var(--grc-sidebar-width) minmax(0, 1fr);
+  grid-template-areas:
+    "header   header"
+    "mainmenu mainmenu"
+    "side     content"
+    "footer   footer";
+  height: 100vh;
+  overflow: hidden;            /* so side e content rolam */
+  font-family: var(--grc-font-body);
+  font-size: 16px; line-height: 1.6;
+  color: var(--grc-text);
+  background: var(--grc-bg);
+}
+body.grc.grc-no-side { grid-template-columns: 0 minmax(0, 1fr); }
+body.grc.grc-no-side #grc-sidemenu { display: none; }
+
+/* ---------- header ---------- */
+#grc-header {
+  grid-area: header; overflow: hidden; background: var(--grc-primary);
+  position: relative; display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; padding: 0 32px;
+}
+/* imagem de fundo opcional (header.png): fica atras do titulo e dos logos */
+#grc-header .grc-header-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.grc-header-text {
+  position: relative; z-index: 1; min-width: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  color: var(--grc-primary-text);
+}
+
+/* logos (lado direito) */
+.grc-logos {
+  position: relative; z-index: 1; flex: none;
+  display: flex; align-items: center; gap: 20px;
+}
+.grc-logos img { height: var(--grc-logo-height); width: auto; display: block; }
+.grc-logos img + img { padding-left: 20px; border-left: 1px solid rgba(255,255,255,.35); }
+/* selo claro: mantem as cores originais dos logos sobre o oliva */
+.grc-logos-chip { background: var(--grc-bg); padding: 10px 18px; border-radius: 8px; }
+.grc-logos-chip img + img { border-left-color: var(--grc-border); }
+.grc-title    { font-family: var(--grc-font-title); font-size: 2.2rem; font-weight: 700; line-height: 1.1; }
+.grc-subtitle { font-family: var(--grc-font-accent); font-style: italic; font-size: 1.05rem; opacity: .9; margin-top: 6px; }
+
+/* ---------- menu principal ---------- */
+#grc-mainmenu {
+  grid-area: mainmenu;
+  display: flex; flex-wrap: wrap;
+  background: var(--grc-primary);
+  border-top: 1px solid rgba(255,255,255,.15);
+  padding: 0 16px;
+}
+#grc-mainmenu a {
+  color: var(--grc-primary-text); text-decoration: none;
+  padding: 12px 18px; font-weight: 500;
+  border-bottom: 3px solid transparent;
+}
+#grc-mainmenu a:hover  { background: rgba(255,255,255,.08); }
+#grc-mainmenu a.active { border-bottom-color: var(--grc-accent); }
+
+/* ---------- menu lateral ---------- */
+#grc-sidemenu {
+  grid-area: side; overflow-y: auto;
+  background: var(--grc-side-bg);
+  border-right: 1px solid var(--grc-border);
+  padding: 16px 0;
+}
+#grc-sidemenu a {
+  display: block; color: var(--grc-side-text); text-decoration: none;
+  padding: 9px 20px; border-left: 4px solid transparent; font-size: .95rem;
+}
+#grc-sidemenu a:hover  { background: rgba(0,0,0,.04); }
+#grc-sidemenu a.active { border-left-color: var(--grc-accent-strong); font-weight: 600; background: var(--grc-accent-soft); }
+
+/* ---------- corpo ---------- */
+#grc-content { grid-area: content; min-width: 0; overflow-y: auto; padding: 24px 40px 48px; }
+#grc-content > * { max-width: var(--grc-content-max); }
+#grc-content a { color: var(--grc-primary); text-decoration-color: var(--grc-accent-strong); }
+#grc-content h1 { font-size: .85rem; text-transform: uppercase; letter-spacing: .08em; color: var(--grc-muted); margin: 0 0 4px; }
+#grc-content h2 { font-family: var(--grc-font-title); font-size: 2rem; font-weight: 700; line-height: 1.15; margin: 0 0 16px; color: var(--grc-primary); }
+#grc-content h3 { font-family: var(--grc-font-title); font-size: 1.35rem; font-weight: 600; margin: 1.6em 0 .5em; color: var(--grc-primary); }
+#grc-content h4 { font-family: var(--grc-font-body); font-size: 1.05rem; font-weight: 700; margin: 1.4em 0 .4em; }
+#grc-content blockquote {
+  font-family: var(--grc-font-accent); font-style: italic; font-size: 1.05rem;
+  margin: 1.2em 0; padding: 4px 0 4px 20px; border-left: 3px solid var(--grc-accent-strong); color: var(--grc-primary);
+}
+#grc-content .caption, #grc-content caption, #grc-content figcaption {
+  font-family: var(--grc-font-accent); font-size: .9rem; color: var(--grc-muted); font-style: italic;
+}
+#grc-content code, #grc-content pre { font-family: var(--grc-font-mono); font-size: .88em; }
+#grc-content img { max-width: 100%; height: auto; }
+#grc-content table { border-collapse: collapse; margin: 1em 0; }
+#grc-content th, #grc-content td { border-bottom: 1px solid var(--grc-border); padding: 6px 12px; }
+#grc-content td { font-variant-numeric: tabular-nums; }
+#grc-content pre { background: var(--grc-code-bg); padding: 12px; border-radius: 4px; overflow-x: auto; }
+
+/* ---------- caixas de nota ---------- */
+.grc-callout { margin: 1.4em 0; padding: 12px 18px 12px 16px; border-radius: 6px; }
+.grc-callout > :last-child { margin-bottom: 0; }
+.grc-callout > p:nth-child(2) { margin-top: 0; }
+.grc-callout-title {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+  font-family: var(--grc-font-title); font-weight: 600; font-size: 1.02rem; letter-spacing: .01em;
+}
+.grc-callout-icon { width: 20px; height: 20px; flex: none; }
+
+/* Note (importancia 3): discreta, so barra lateral */
+.grc-note { background: var(--grc-note-bg); border-left: 3px solid var(--grc-note-line); border-radius: 0 6px 6px 0; }
+.grc-note .grc-callout-title { color: var(--grc-note-line); }
+
+/* Note to self: azul frio + borda tracejada = "nota interna" */
+.grc-self { background: var(--grc-self-bg); border: 1.5px dashed var(--grc-self-line); }
+.grc-self .grc-callout-title { color: var(--grc-self-title); }
+
+/* Attention (importancia 1): quadro translucido completo + barra forte */
+.grc-attention {
+  background: var(--grc-attention-bg);
+  border: 1px solid var(--grc-attention-frame);
+  border-left: 5px solid var(--grc-attention-line);
+}
+.grc-attention .grc-callout-title { color: var(--grc-attention-title); font-weight: 700; }
+
+/* ---------- code folding (botao mostrar/esconder codigo) ---------- */
+.grc-fold { margin: 1em 0; }
+.grc-fold > .sourceCode { margin-top: 4px; }
+.grc-fold:not(.open) > :not(.grc-fold-btn) { display: none; }
+.grc-fold-btn, .grc-fold-all {
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  font-family: var(--grc-font-body); font-size: .8rem; font-weight: 700; line-height: 1;
+}
+.grc-fold-btn svg, .grc-fold-all svg { width: 14px; height: 14px; }
+.grc-fold-btn {
+  padding: 5px 10px; border-radius: 4px;
+  color: var(--grc-primary); background: var(--grc-code-bg); border: 1px solid var(--grc-border);
+}
+.grc-fold-btn:hover { border-color: var(--grc-accent-strong); }
+.grc-fold.open .grc-fold-btn { background: transparent; }
+/* botao global, no canto direito do menu principal */
+.grc-fold-all {
+  margin: 8px 0 8px auto; padding: 6px 12px; border-radius: 4px; align-self: center;
+  color: var(--grc-primary-text); background: transparent; border: 1px solid rgba(255,255,255,.35);
+}
+.grc-fold-all:hover { border-color: var(--grc-accent); color: var(--grc-accent); }
+
+/* ---------- galeria (div.gallery) ---------- */
+.grc-gallery {
+  margin: 1.2em 0; padding: 12px; border: 1px solid var(--grc-border); border-radius: 8px;
+  background: var(--grc-bg); outline: none;
+}
+.grc-gallery:focus-visible { border-color: var(--grc-accent-strong); }
+.grc-gallery-main { margin: 0; text-align: center; }
+#grc-content .grc-gallery-main img {
+  max-width: 100%; max-height: var(--grc-gallery-height); width: auto; height: auto;
+  display: block; margin: 0 auto;
+}
+.grc-gallery-main figcaption {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  margin-top: 8px; padding: 0 4px; text-align: left;
+}
+.grc-gallery-cap   { font-family: var(--grc-font-accent); font-style: italic; font-size: .92rem; color: var(--grc-text); }
+.grc-gallery-count { font-size: .8rem; color: var(--grc-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.grc-gallery-strip {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--grc-border);
+}
+.grc-gallery-thumbs {
+  position: relative; flex: 1; min-width: 0;
+  display: flex; gap: 8px; overflow-x: auto; scroll-behavior: smooth; padding: 3px;
+}
+.grc-gallery-thumb {
+  flex: none; padding: 0; cursor: pointer; background: var(--grc-bg);
+  border: 2px solid var(--grc-border); border-radius: 4px; opacity: .65;
+  transition: opacity .15s, border-color .15s;
+}
+#grc-content .grc-gallery-thumb img { max-width: none; height: var(--grc-gallery-thumb); width: auto; display: block; border-radius: 2px; }
+.grc-gallery-thumb:hover  { opacity: 1; }
+.grc-gallery-thumb.active { opacity: 1; border-color: var(--grc-accent-strong); }
+.grc-gallery-nav {
+  flex: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer;
+  font-size: 1.4rem; line-height: 1; color: var(--grc-primary);
+  background: var(--grc-side-bg); border: 1px solid var(--grc-border);
+}
+.grc-gallery-nav:hover { border-color: var(--grc-accent-strong); color: var(--grc-accent-strong); }
+.grc-gallery-single .grc-gallery-strip { display: none; }
+
+/* ---------- botao de download (camera) nas figuras ---------- */
+.grc-dl-wrap { position: relative; display: inline-block; max-width: 100%; vertical-align: top; }
+.grc-gallery-main .grc-dl-wrap { display: inline-block; }
+.grc-dl-btn {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  width: 32px; height: 32px; padding: 6px; cursor: pointer;
+  color: var(--grc-primary); background: rgba(255, 252, 246, .92);
+  border: 1px solid var(--grc-border); border-radius: 6px;
+  opacity: 0; transition: opacity .15s, color .15s, border-color .15s;
+}
+.grc-dl-btn svg { width: 100%; height: 100%; display: block; }
+.grc-dl-wrap:hover .grc-dl-btn, .grc-dl-btn:focus-visible { opacity: 1; }
+.grc-dl-btn:hover { color: var(--grc-accent-strong); border-color: var(--grc-accent-strong); }
+@media (hover: none) { .grc-dl-btn { opacity: .85; } }   /* telas de toque: sempre visivel */
+
+/* secoes escondidas pelo JS */
+.grc-hidden { display: none !important; }
+
+/* ---------- rodape ---------- */
+#grc-footer { grid-area: footer; overflow: hidden; background: var(--grc-footer-bg); position: relative; }
+/* se houver imagem, ela fica de fundo e o texto por cima */
+#grc-footer img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+#grc-footer .grc-footer-text { position: relative; z-index: 1; }
+.grc-footer-text {
+  height: 100%; display: flex; align-items: center; justify-content: center;
+  color: var(--grc-footer-text); font-size: .9rem;
+}
+
+/* ---------- telas pequenas: menu lateral vira faixa horizontal ---------- */
+@media (max-width: 768px) {
+  body.grc {
+    grid-template-rows: 70px auto auto 1fr var(--grc-footer-height);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "header" "mainmenu" "side" "content" "footer";
+  }
+  body.grc.grc-no-side { grid-template-columns: minmax(0, 1fr); }
+  #grc-sidemenu { display: flex; overflow-x: auto; padding: 0; border-right: 0; border-bottom: 1px solid var(--grc-border); }
+  #grc-sidemenu a { white-space: nowrap; border-left: 0; border-bottom: 3px solid transparent; }
+  #grc-sidemenu a.active { border-bottom-color: var(--grc-accent-strong); }
+  #grc-content { padding: 16px; }
+  #grc-header { padding: 0 16px; gap: 12px; }
+  .grc-title    { font-size: 1.3rem; }
+  .grc-subtitle { font-size: .8rem; margin-top: 2px; }
+  .grc-logos { gap: 10px; }
+  .grc-logos img { height: 28px; }
+  .grc-logos img + img { padding-left: 10px; }
+  .grc-logos-chip { padding: 5px 9px; border-radius: 6px; }
+}
+
+/* ---------- notas de rodape (movidas pelo JS para o fim de cada pagina) ---------- */
+.grc-footnotes { margin-top: 2.5em; font-size: .88rem; color: var(--grc-muted); }
+.grc-footnotes hr { border: 0; border-top: 1px solid var(--grc-border); width: 120px; margin: 0 0 .8em; }
+.grc-footnotes ol { padding-left: 1.4em; margin: 0; }

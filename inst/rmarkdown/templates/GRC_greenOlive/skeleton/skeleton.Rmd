@@ -1,0 +1,376 @@
+---
+title: "GRC greenOlive"
+subtitle: "Guide to everything the theme can do"
+author: "Gabriela Romero Campos"
+date: "`r Sys.Date()`"
+output:
+  grcthemes::GRC_greenOlive:
+    code_folding: show        # show | hide | none
+    # --- every option, with its default -----------------------------------
+    # intro_label: "Overview"   # side-menu label for text before the first ##
+    # self_notes: true          # false = remove all "::: self" boxes (version to share)
+    # footer_author: "Gabriela Romero Campos"   # "" = only the update time
+    # logo_chip: true           # false = white logos directly on the header
+    # logos: "C:/my/logos"     # folder with logo_* files, or ["a.png", "b.png"]; [] = none
+    # header_img: "img/bg.png"  # background image behind the title
+    # footer_img: "img/ft.png"  # background image behind the footer text
+    # ggplot_defaults: true     # false = do not apply the theme to ggplots
+    # download_dpi: 300         # camera button resolution; null = no buttons
+    # highlight: "tango"        # code colours
+---
+
+```{r setup, include = FALSE}
+library(grcthemes)   # greenOlive_colors(), scale_*_greenOlive(), grc_gallery(), ...
+library(ggplot2)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
+                      fig.width = 8, fig.height = 4.5)
+
+# demo data used in this guide
+set.seed(42)
+sites <- paste("Site", LETTERS[1:5])
+ndvi  <- expand.grid(site = sites, day = seq(0, 120, by = 10))
+ndvi$ndvi <- 0.2 + 0.6 * exp(-((ndvi$day - c(70, 75, 80, 65, 85)[match(ndvi$site, sites)]) / 35)^2) +
+  rnorm(nrow(ndvi), 0, 0.02)
+plots <- data.frame(site  = rep(sites, each = 30),
+                    yield = rnorm(150, rep(c(4.2, 4.8, 5.1, 3.9, 4.5), each = 30), 0.5))
+```
+
+# Start here
+
+This document is both a **demo** and a **cheat sheet**: every page shows a
+feature working and, right below, how to write it. Create it again any time
+from RStudio: *File > New File > R Markdown > From Template > GRC greenOlive - guide*.
+
+Text written between a `#` heading and its first `##` (like this paragraph)
+becomes the first side-menu item, labelled **Overview** (`intro_label`).
+
+## Page structure
+
+The headings build the menus:
+
+| You write | It becomes |
+|---|---|
+| `# Data` | a tab in the **main menu** (top bar) |
+| `## Flights` | an item in the **side menu** of that tab; only one `##` page is shown at a time |
+| `### Details` and below | headings inside the current page |
+| text before the first `##` | side-menu item "Overview" |
+| a `#` with no `##` | a single page, the side menu is hidden |
+
+```markdown
+# Data
+
+Short introduction (side-menu item "Overview").
+
+## Flights
+...
+### Sensor settings
+...
+## Orthomosaics
+...
+```
+
+**Links between pages** work with the heading id (lower case, spaces become
+`-`): `[see the callouts](#callouts)` gives [see the callouts](#callouts).
+Custom ids: `## My page {#my-id}`. Back/forward buttons and reloading the page
+keep the current position.
+
+## YAML options
+
+Everything is optional. The YAML at the top of this file lists every option
+with its default value (commented out).
+
+```yaml
+output:
+  grcthemes::GRC_greenOlive:
+    code_folding: hide
+    self_notes: false
+    download_dpi: 600
+```
+
+Inside a chunk, `grc_themes()` lists the themes installed:
+`r paste(grc_themes(), collapse = ", ")`.
+
+# Text
+
+## Formatting
+
+Body text is set in Lato. **Bold**, *italic*, `inline code`,
+[external link](https://www.k-state.edu), footnote[^1], subscript H~2~O,
+superscript m^2^, and maths: $NDVI = \frac{NIR - Red}{NIR + Red}$.
+
+[^1]: Footnotes go to the end of the page.
+
+> Quotes use the accent font (Libre Baskerville italic): good for a key
+> finding or a definition.
+
+1. Numbered list
+2. Second item
+   - nested bullet
+
+```markdown
+**Bold**, *italic*, `inline code`, [link](https://...), footnote[^1]
+H~2~O, m^2^, $NDVI = \frac{NIR - Red}{NIR + Red}$
+
+[^1]: Footnote text.
+
+> A quote in the accent font.
+```
+
+Inline R results: the data have `r nrow(plots)` plots, mean yield
+`r round(mean(plots$yield), 2)` t/ha, written as `` `r knitr::inline_expr("round(mean(plots$yield), 2)")` ``.
+
+## Callouts
+
+::: note
+**Note** (importance 3): general remarks.
+:::
+
+::: self
+**Note to self**: reminders such as "do not run X because of Y".
+Removed from the HTML with `self_notes: false` in the YAML.
+:::
+
+::: attention
+**Attention** (importance 1): things the reader must not miss.
+:::
+
+::: {.attention title="Sensor firmware changed"}
+Any box takes a custom title. Lists, `code` and **bold** work inside.
+:::
+
+```markdown
+::: note
+General note.
+:::
+
+::: self
+Do not run normalize() with method = "panel": no panel in 2023.
+:::
+
+::: attention
+Sites D and E used another firmware.
+:::
+
+::: {.attention title="Custom title"}
+Text.
+:::
+```
+
+## Tables
+
+Markdown table, with caption and alignment (`:` on the right = right aligned):
+
+| Site | Flights | Mean NDVI |
+|------|--------:|----------:|
+| A    | 5       | 0.712     |
+| B    | 6       | 0.688     |
+
+Table: Caption written below the table.
+
+```markdown
+| Site | Flights | Mean NDVI |
+|------|--------:|----------:|
+| A    | 5       | 0.712     |
+
+Table: Caption written below the table.
+```
+
+From R, with `knitr::kable()`:
+
+```{r}
+knitr::kable(aggregate(yield ~ site, plots, function(x) round(mean(x), 2)),
+             caption = "Mean yield by site (t/ha).", align = "lr")
+```
+
+# Code
+
+## Code folding
+
+With `code_folding: show` (or `hide`) in the YAML, every chunk gets a
+**Show code / Hide code** button, and the top bar gets **Show/Hide all code**.
+
+```{r}
+# a normal chunk: follows the YAML default
+summary(plots$yield)
+```
+
+```{r, class.source = "fold-hide"}
+# this one starts collapsed even with code_folding: show
+quantile(plots$yield, c(0.05, 0.95))
+```
+
+````markdown
+```{r, class.source = "fold-hide"}   # starts collapsed
+```
+```{r, class.source = "fold-show"}   # starts open (with code_folding: hide)
+```
+```{r, echo = FALSE}                 # no code at all, only the output
+```
+````
+
+## Chunk options
+
+| Option | Effect |
+|---|---|
+| `echo = FALSE` | hide the code, show the output |
+| `include = FALSE` | run, show nothing (setup, data loading) |
+| `eval = FALSE` | show the code, do not run it |
+| `message = FALSE`, `warning = FALSE` | hide messages / warnings |
+| `fig.width = 8, fig.height = 4.5` | figure size (inches) |
+| `fig.cap = "..."` | figure caption (one per plot in galleries) |
+| `class.source = "fold-hide"` | start with the code collapsed |
+| `gallery = TRUE` | put all plots of the chunk in a gallery |
+| `download = FALSE` | no camera (download) button for these plots |
+
+# Figures
+
+## Figures and download
+
+ggplots get the theme and colours **automatically** (no `theme_*()` needed).
+Hover the figure: the **camera** button downloads a 300 dpi PNG
+(`download_dpi` in the YAML); the file is named after the chunk label.
+
+```{r ndvi-season, fig.cap = "NDVI over the season (simulated)."}
+ggplot(ndvi, aes(day, ndvi, colour = site)) +
+  geom_line(linewidth = 1.1) + geom_point(size = 2) +
+  labs(title = "NDVI over the season", subtitle = "Five sites",
+       x = "Days after sowing", y = "NDVI", colour = NULL,
+       caption = "Captions inside the plot use the accent font.")
+```
+
+```{r, download = FALSE, fig.height = 3.5}
+# download = FALSE: no camera button (smaller HTML)
+ggplot(plots, aes(site, yield, fill = site)) +
+  geom_boxplot(outlier.shape = NA) + guides(fill = "none") +
+  labs(title = "Yield by site", x = NULL, y = "Yield (t/ha)")
+```
+
+::: note
+Each downloadable figure adds about 200 KB to the HTML. For reports with many
+figures, use `download = FALSE` in some chunks or `download_dpi: null` in the YAML.
+:::
+
+## Colours and scales
+
+```{r, fig.height = 2.6}
+greenOlive_colors()      # the 8 categorical colours, with names
+pal <- greenOlive_colors()
+ggplot(data.frame(name = factor(names(pal), names(pal))), aes(name, 1, fill = name)) +
+  geom_col() + guides(fill = "none") + theme_greenOlive(grid = "none") +
+  theme(axis.text.y = element_blank(), axis.title = element_blank())
+```
+
+```{r, fig.height = 3.8}
+grid <- expand.grid(x = 1:40, y = 1:20)
+grid$ndvi <- with(grid, 0.3 + 0.5 * exp(-((x - 25)^2 + (y - 10)^2) / 120))
+grid$diff <- with(grid, 0.08 * sin(x / 6) + 0.05 * cos(y / 4))
+
+ggplot(grid, aes(x, y, fill = diff)) + geom_raster() + coord_equal() +
+  scale_fill_greenOlive_c("div", midpoint = 0) +      # diverging
+  theme_greenOlive(grid = "none") +
+  labs(title = "Diverging scale", subtitle = "e.g. flight 2 - flight 1", x = NULL, y = NULL)
+```
+
+| Function | Use |
+|---|---|
+| `greenOlive_colors(3)` / `greenOlive_colors("olive", "peach")` | hex codes by number or name |
+| `scale_colour_greenOlive()` / `scale_fill_greenOlive()` | groups (default; up to 8); `reverse = TRUE` |
+| `scale_fill_greenOlive_c("seq")` | continuous, cream to olive (default; e.g. NDVI) |
+| `scale_fill_greenOlive_c("div", midpoint = 0)` | diverging, blue - cream - terracotta |
+| `theme_greenOlive(grid = "y", legend = "right")` | the theme; `grid`: `"xy"`, `"y"`, `"x"`, `"none"` |
+
+Names: olive, peach, sand, blue, plum, rose, dark, grey. More than 8 groups:
+prefer `facet_wrap()`.
+
+## Base R plots
+
+Base graphics also get the cream background; use the theme colours by hand:
+
+```{r, fig.height = 3.5}
+hist(plots$yield, col = greenOlive_colors("sand"), border = "white",
+     main = "Yield", xlab = "t/ha")
+```
+
+## Gallery
+
+Many similar plots: one big selected image + thumbnails (click, arrows, or
+the keyboard ← →). The camera button downloads the selected image.
+
+**1. Plots made in the chunk:** `gallery = TRUE` (remember `print()` inside loops).
+
+```{r, gallery = TRUE, fig.cap = paste("NDVI curve,", sites)}
+for (s in sites) {
+  print(
+    ggplot(subset(ndvi, site == s), aes(day, ndvi)) +
+      geom_area(fill = greenOlive_colors("sand"), alpha = .6) +
+      geom_line(colour = greenOlive_colors("olive"), linewidth = 1.2) +
+      ylim(0, 1) + labs(title = s, x = "Days after sowing", y = "NDVI")
+  )
+}
+```
+
+**2. Images already saved:** `grc_gallery(files, captions)`; captions default
+to the file names.
+
+```{r, include = FALSE}
+# (only for this demo: save a few PNGs in a temporary folder)
+demo_dir <- file.path(tempdir(), "gallery demo")
+dir.create(demo_dir, showWarnings = FALSE)
+for (s in sites[1:3]) {
+  ggsave(file.path(demo_dir, paste0("yield_", s, ".png")),
+         ggplot(subset(plots, site == s), aes(yield)) +
+           geom_histogram(bins = 12, fill = greenOlive_colors("blue"), colour = "white") +
+           labs(title = paste("Yield -", s), x = "t/ha", y = "Plots") + theme_greenOlive(),
+         width = 8, height = 4.5, dpi = 150, device = ragg::agg_png, bg = "#FFFCF6")
+}
+```
+
+```{r}
+grc_gallery(list.files(demo_dir, pattern = "png$", full.names = TRUE))
+```
+
+**3. Markdown block** around images or chunks:
+
+```markdown
+::: gallery
+![Caption 1](figs/a.png)
+
+![Caption 2](figs/b.png)
+:::
+```
+
+## Interactive
+
+htmlwidgets such as plotly work normally, also on pages that start hidden.
+
+```{r, eval = requireNamespace("plotly", quietly = TRUE)}
+plotly::plot_ly(ndvi, x = ~day, y = ~ndvi, color = ~site,
+                colors = greenOlive_colors(5), type = "scatter", mode = "lines+markers")
+```
+
+# Help
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| Plot fonts look plain in the RStudio Plots pane | *Tools > Global Options > General > Graphics > Backend: AGG* (inside the report it already works) |
+| Page fonts missing after rendering | the HTML downloads Google Fonts at render time: knit with internet |
+| Plots from a loop do not appear | wrap them in `print()` |
+| HTML file too big | `download = FALSE` in some chunks, or `download_dpi: null` |
+| A `::: self` note appears in the shared version | render with `self_notes: false` |
+| Heading link does not work | check the id: lower case, spaces as `-`, or set `{#my-id}` |
+
+## Functions
+
+| Function | |
+|---|---|
+| `GRC_greenOlive()` | the output format (`output: grcthemes::GRC_greenOlive`) |
+| `grc_themes()` | themes installed |
+| `grc_gallery(files, captions)` | gallery from image files |
+| `greenOlive_colors()`, `greenOlive_palette` | colours |
+| `scale_colour_greenOlive()`, `scale_fill_greenOlive()` | discrete scales |
+| `scale_colour_greenOlive_c()`, `scale_fill_greenOlive_c()` | continuous scales (`"seq"`, `"div"`) |
+| `theme_greenOlive()` | ggplot theme |
+
+Help pages: `?GRC_greenOlive`, `?theme_greenOlive`, etc.

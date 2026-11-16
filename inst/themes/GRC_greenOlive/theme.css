@@ -1,0 +1,45 @@
+/* =====================================================================
+   GRC_greenOlive  -  cores e fontes do tema
+   ---------------------------------------------------------------------
+   Este arquivo so define variaveis. Layout e componentes ficam em
+   ../shared/grc.css (compartilhado por todos os temas).
+   Para criar um tema novo: copie esta pasta, troque os valores abaixo.
+   As fontes sao carregadas pela URL do Google Fonts definida em
+   R/themes.R (fonts_url) e, para os plots, pelos .ttf em fonts/.
+   ===================================================================== */
+:root {
+  /* Verde-oliva */
+  --grc-primary:       #3F4A33;  /* menu principal (fundo), titulos, links */
+  --grc-primary-text:  #FFFFFF;  /* texto sobre o oliva                    */
+  --grc-footer-bg:     #293021;  /* oliva bem escuro: rodape (sem imagem)  */
+  --grc-footer-text:   #F3ECDD;
+  /* Pessego claro */
+  --grc-accent:        #F5C9AE;  /* destaque sobre fundo escuro (menu principal) */
+  --grc-accent-strong: #B0653F;  /* destaque sobre fundo claro (menu lateral)    */
+  --grc-accent-soft:   #FBE6D9;  /* fundo do item lateral ativo                  */
+  /* Areia */
+  --grc-side-bg:       #EFE6D2;  /* fundo do menu lateral                  */
+  --grc-side-text:     #3E4628;  /* texto do menu lateral                  */
+  --grc-border:        #DDD1B8;  /* bordas, linhas de tabela             */
+  --grc-code-bg:       #F6F1E6;  /* fundo dos blocos de codigo           */
+  /* Neutros */
+  --grc-bg:            #FFFCF6;  /* fundo do corpo (branco quente)       */
+  --grc-text:          #2F2B25;  /* texto do corpo                       */
+  --grc-muted:         #6F6A5C;  /* textos secundarios                   */
+
+  /* ---- CAIXAS DE NOTA (::: note / ::: self / ::: attention) ---- */
+  --grc-note-line:      #3F4A33;                  /* Note: oliva, discreta         */
+  --grc-note-bg:        rgba(239, 230, 210, .45); /* areia translucida             */
+  --grc-self-line:      #6A8FB0;                  /* Note to self: azul, tracejada */
+  --grc-self-title:     #44698C;
+  --grc-self-bg:        rgba(106, 143, 176, .08);
+  --grc-attention-line: #B0653F;                  /* Attention: pessego forte      */
+  --grc-attention-title:#96522F;
+  --grc-attention-bg:   rgba(176, 101, 63, .12);  /* quadro translucido            */
+  --grc-attention-frame:rgba(176, 101, 63, .45);
+
+  /* ---- fontes ---- */
+  --grc-font-title:  "League Spartan", "Segoe UI", sans-serif;      /* titulo, ## e ###   */
+  --grc-font-accent: "Libre Baskerville", Georgia, serif;           /* subtitulo, citacoes, legendas */
+  --grc-font-body:   "Lato", "Segoe UI", system-ui, sans-serif;     /* texto, menus, tabelas */
+}

@@ -1,0 +1,25 @@
+Package: grcthemes
+Title: R Markdown HTML Themes by GRC
+Version: 0.1.0
+Authors@R: person("Gabriela", "Romero Campos", email = "grcampos@ksu.edu", role = c("aut", "cre"))
+Description: R Markdown HTML output formats with a fixed header, a main menu
+    built from level-1 headings, a section-dependent side menu, and a fixed
+    footer. Includes callout boxes, code folding, image galleries, high
+    resolution download buttons for figures, and matching 'ggplot2' themes,
+    colour palettes and scales. Themes: GRC_greenOlive.
+License: MIT + file LICENSE
+URL: https://github.com/GRCampo/grcthemes
+BugReports: https://github.com/GRCampo/grcthemes/issues
+Encoding: UTF-8
+Depends: R (>= 4.1)
+Imports: rmarkdown, knitr, htmltools, ggplot2 (>= 3.5.0), scales, systemfonts, ragg
+Suggests: plotly
+Collate:
+    'themes.R'
+    'ggplot.R'
+    'format.R'
+    'gallery.R'
+    'download.R'
+    'GRC_greenOlive.R'
+    'zzz.R'
+Config/roxygen2/version: 8.1.0

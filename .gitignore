@@ -1,0 +1,21 @@
+# R / RStudio
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rcheck/
+grcthemes_*.tar.gz
+
+# Rendered test output
+*.html
+!inst/themes/**/*.html
+*_files/
+*_cache/
+*.knit.md
+*.utf8.md
+dev/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
